@@ -1,0 +1,62 @@
+-- Keymaps are automatically loaded on the VeryLazy event
+-- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
+-- Add any additional keymaps here
+--
+--
+-- return {
+--   {
+--     "hrsh7th/nvim-cmp",
+--     opts = function(_, opts)
+--       local cmp = require("cmp")
+--       opts.mapping = vim.tbl_extend("force", opts.mapping, {
+--         ["<Tab>"] = cmp.mapping(function(fallback)
+--           if cmp.visible() then
+--             cmp.select_next_item()
+--           else
+--             fallback()
+--           end
+--         end, { "i" }),
+--         ["<S-Tab>"] = cmp.mapping(function(fallback)
+--           if cmp.visible() then
+--             cmp.select_prev_item()
+--           else
+--             fallback()
+--           end
+--         end, { "i" }),
+--         -- ["<C->"] = cmp.mapping.complete(),
+--         -- ["<C-e>"] = cmp.mapping(function()
+--         --   if cmp.visible() then
+--         --     cmp.abort()
+--         --     -- else
+--         --     --   cmp.complete()
+--         --   end
+--         -- end, { "i" }),
+--         -- ["<CR>"] = cmp.confirm(),
+--         -- ["<S-CR>"] = cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+--         -- ["<C-CR>"] = function(fallback)
+--         --   cmp.abort()
+--         --   fallback()
+--         -- end,
+--       })
+--     end,
+--   },
+-- }
+
+-- return {
+--   {
+--     "L3MON5D3/LuaSnip",
+--     keys = {
+--       {
+--         "<C-a>",
+--         function()
+--           local ls = require("luasnip")
+--           if ls.choice_active() then
+--             ls.change_choice(1)
+--           end
+--         end,
+--         silent = true,
+--         mode = { "i", "s" },
+--       },
+--     },
+--   },
+-- }
