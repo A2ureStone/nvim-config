@@ -45,6 +45,21 @@ return {
         require("telescope").load_extension("live_grep_args")
       end,
     },
+    {
+      "nvim-telescope/telescope-frecency.nvim",
+      version = "false",
+      keys = {
+        {
+          "<leader>.",
+          ":lua require('telescope').extensions.frecency.frecency()<CR>",
+          mode = "n",
+          desc = "frecency finder",
+        },
+      },
+      config = function()
+        require("telescope").load_extension("frecency")
+      end,
+    },
   },
   keys = {
     {
@@ -162,8 +177,8 @@ return {
           i = {
             ["<c-t>"] = open_with_trouble,
             ["<a-t>"] = open_with_trouble,
-            ["<a-i>"] = find_files_no_ignore,
-            ["<a-h>"] = find_files_with_hidden,
+            ["<c-i>"] = find_files_no_ignore,
+            ["<c-h>"] = find_files_with_hidden,
             ["<C-Down>"] = actions.cycle_history_next,
             ["<C-Up>"] = actions.cycle_history_prev,
             ["<C-f>"] = actions.preview_scrolling_down,
@@ -171,6 +186,15 @@ return {
           },
           n = {
             ["q"] = actions.close,
+          },
+        },
+        layout_config = {
+          horizontal = {
+            height = 0.9,
+            preview_cutoff = 120,
+            prompt_position = "bottom",
+            width = 0.99,
+            preview_width = 0.65,
           },
         },
       },
