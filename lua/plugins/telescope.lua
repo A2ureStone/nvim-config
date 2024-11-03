@@ -1,3 +1,106 @@
+-- 检查是否已经有垂直分割的窗口
+local function has_vsplit()
+  local wins = vim.api.nvim_list_wins()
+  if #wins < 2 then
+    return false
+  end
+
+  -- 获取当前窗口的位置信息
+  local current_win = vim.api.nvim_get_current_win()
+  local current_pos = vim.api.nvim_win_get_position(current_win)
+
+  -- 检查是否有其他窗口在当前窗口的左边或右边
+  for _, win in ipairs(wins) do
+    if win ~= current_win then
+      local pos = vim.api.nvim_win_get_position(win)
+      if pos[1] == current_pos[1] and pos[2] ~= current_pos[2] then
+        return true, win
+      end
+    end
+  end
+
+  return false
+end
+
+-- 智能垂直分割函数
+local function smart_vsplit(prompt_bufnr)
+  local action_state = require("telescope.actions.state")
+  local selection = action_state.get_selected_entry()
+
+  if selection == nil then
+    return
+  end
+
+  -- 获取选中文件的完整路径
+  local filename = selection.path or selection.filename
+
+  if filename == nil then
+    return
+  end
+
+  -- 关闭 telescope 窗口
+  require("telescope.actions").close(prompt_bufnr)
+
+  -- 检查是否已经有垂直分割
+  local has_split, existing_win = has_vsplit()
+
+  if has_split then
+    -- 如果已经有分割，在现有窗口中打开文件
+    vim.api.nvim_set_current_win(existing_win)
+    vim.cmd("edit " .. vim.fn.fnameescape(filename))
+  else
+    -- 如果没有分割，创建新的垂直分割
+    vim.cmd("vsplit " .. vim.fn.fnameescape(filename))
+  end
+end
+
+local function has_hsplit()
+  local wins = vim.api.nvim_list_wins()
+  if #wins < 2 then
+    return false
+  end
+
+  local current_win = vim.api.nvim_get_current_win()
+  local current_pos = vim.api.nvim_win_get_position(current_win)
+
+  for _, win in ipairs(wins) do
+    if win ~= current_win then
+      local pos = vim.api.nvim_win_get_position(win)
+      if pos[1] ~= current_pos[1] and pos[2] == current_pos[2] then
+        return true, win
+      end
+    end
+  end
+
+  return false
+end
+
+local function smart_hsplit(prompt_bufnr)
+  local action_state = require("telescope.actions.state")
+  local selection = action_state.get_selected_entry()
+
+  if selection == nil then
+    return
+  end
+
+  local filename = selection.path or selection.filename
+
+  if filename == nil then
+    return
+  end
+
+  require("telescope.actions").close(prompt_bufnr)
+
+  local has_split, existing_win = has_hsplit()
+
+  if has_split then
+    vim.api.nvim_set_current_win(existing_win)
+    vim.cmd("edit " .. vim.fn.fnameescape(filename))
+  else
+    vim.cmd("split " .. vim.fn.fnameescape(filename))
+  end
+end
+
 return {
   "nvim-telescope/telescope.nvim",
   cmd = "Telescope",
@@ -183,9 +286,13 @@ return {
             ["<C-Up>"] = actions.cycle_history_prev,
             ["<C-f>"] = actions.preview_scrolling_down,
             ["<C-b>"] = actions.preview_scrolling_up,
+            ["<C-w>"] = smart_vsplit,
+            ["<C-z>"] = smart_hsplit,
           },
           n = {
             ["q"] = actions.close,
+            ["<C-w>"] = smart_vsplit,
+            ["<C-z>"] = smart_hsplit,
           },
         },
         layout_config = {
